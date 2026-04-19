@@ -44,7 +44,7 @@ func TestCheck_Success(t *testing.T) {
 		fmt.Fprint(w, `{
 			"request_id": "req-123",
 			"ip": "8.8.8.8",
-			"fraud_score": 12.5,
+			"fraud_score": 70,
 			"is_proxy": false,
 			"is_vpn": false,
 			"is_tor": false,
@@ -70,8 +70,8 @@ func TestCheck_Success(t *testing.T) {
 	if resp.RequestID != "req-123" {
 		t.Errorf("request_id = %q, want %q", resp.RequestID, "req-123")
 	}
-	if resp.FraudScore != 12.5 {
-		t.Errorf("fraud_score = %v, want 12.5", resp.FraudScore)
+	if resp.FraudScore != 70 {
+		t.Errorf("fraud_score = %v, want 70", resp.FraudScore)
 	}
 	if !resp.IsDatacenter {
 		t.Error("is_datacenter = false, want true")

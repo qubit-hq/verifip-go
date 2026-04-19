@@ -37,7 +37,7 @@ func main() {
 	}
 
 	fmt.Printf("IP:          %s\n", resp.IP)
-	fmt.Printf("Fraud Score: %.1f\n", resp.FraudScore)
+	fmt.Printf("Fraud Score: %d\n", resp.FraudScore)
 	fmt.Printf("VPN:         %v\n", resp.IsVPN)
 	fmt.Printf("Proxy:       %v\n", resp.IsProxy)
 	fmt.Printf("Tor:         %v\n", resp.IsTor)

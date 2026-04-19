@@ -6,7 +6,7 @@ import "time"
 type CheckResponse struct {
 	RequestID      string         `json:"request_id"`
 	IP             string         `json:"ip"`
-	FraudScore     float64        `json:"fraud_score"`
+	FraudScore     int            `json:"fraud_score"`
 	IsProxy        bool           `json:"is_proxy"`
 	IsVPN          bool           `json:"is_vpn"`
 	IsTor          bool           `json:"is_tor"`

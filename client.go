@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	defaultBaseURL   = "https://api.verifip.io"
+	defaultBaseURL   = "https://api.verifip.com"
 	defaultTimeout   = 30 * time.Second
 	defaultMaxRetries = 3
 	sdkVersion       = "0.1.0"
@@ -174,6 +174,9 @@ func (c *Client) request(ctx context.Context, method, rawURL string, body []byte
 
 		resp, err := c.httpClient.Do(req)
 		if err != nil {
+			if ctx.Err() != nil {
+				return ctx.Err()
+			}
 			lastErr = fmt.Errorf("verifip: request failed: %w", err)
 			continue
 		}
