@@ -1,6 +1,6 @@
 # VerifIP Go SDK
 
-Official Go client for the [VerifIP](https://verifip.io) IP fraud-detection API. Detect proxies, VPNs, Tor exit nodes, and datacenter IPs in real time.
+Official Go client for the [VerifIP](https://verifip.com) IP fraud-detection API. Detect proxies, VPNs, Tor exit nodes, and datacenter IPs in real time.
 
 ## Installation
 
