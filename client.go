@@ -19,7 +19,7 @@ const (
 	defaultBaseURL   = "https://api.verifip.com"
 	defaultTimeout   = 30 * time.Second
 	defaultMaxRetries = 3
-	sdkVersion       = "0.1.4"
+	sdkVersion       = "0.2.0"
 	userAgent        = "verifip-go/" + sdkVersion
 )
 
