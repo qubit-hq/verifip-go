@@ -124,6 +124,102 @@ func (c *Client) Health(ctx context.Context) (*HealthResponse, error) {
 	return &result, nil
 }
 
+// CheckEmail performs an email risk check.
+func (c *Client) CheckEmail(ctx context.Context, email string) (*EmailResponse, error) {
+	u := fmt.Sprintf("%s/v1/email?email=%s", c.baseURL, url.QueryEscape(email))
+
+	var result EmailResponse
+	if err := c.request(ctx, http.MethodGet, u, nil, &result, true); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+// CheckPhone performs a phone number risk check.
+func (c *Client) CheckPhone(ctx context.Context, phone string) (*PhoneResponse, error) {
+	u := fmt.Sprintf("%s/v1/phone?phone=%s", c.baseURL, url.QueryEscape(phone))
+
+	var result PhoneResponse
+	if err := c.request(ctx, http.MethodGet, u, nil, &result, true); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+// CheckURL performs a URL risk check.
+func (c *Client) CheckURL(ctx context.Context, rawURL string) (*URLResponse, error) {
+	u := fmt.Sprintf("%s/v1/url?url=%s", c.baseURL, url.QueryEscape(rawURL))
+
+	var result URLResponse
+	if err := c.request(ctx, http.MethodGet, u, nil, &result, true); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+// CheckWHOIS performs a WHOIS lookup for an IP address.
+func (c *Client) CheckWHOIS(ctx context.Context, ip string) (*WHOISResponse, error) {
+	u := fmt.Sprintf("%s/v1/whois?ip=%s", c.baseURL, url.QueryEscape(ip))
+
+	var result WHOISResponse
+	if err := c.request(ctx, http.MethodGet, u, nil, &result, true); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+// Report submits a fraud report for an IP address.
+func (c *Client) Report(ctx context.Context, ip string, isFraud bool, category, comment string) (*ReportResponse, error) {
+	body := ReportRequest{IP: ip, IsFraud: isFraud}
+	if category != "" {
+		body.Category = category
+	}
+	if comment != "" {
+		body.Comment = comment
+	}
+
+	encoded, err := json.Marshal(body)
+	if err != nil {
+		return nil, fmt.Errorf("verifip: failed to encode request body: %w", err)
+	}
+
+	u := fmt.Sprintf("%s/v1/report", c.baseURL)
+
+	var result ReportResponse
+	if err := c.request(ctx, http.MethodPost, u, encoded, &result, true); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+// Assess performs a multi-signal risk assessment.
+func (c *Client) Assess(ctx context.Context, ip, email, phone, urlStr string) (*AssessResponse, error) {
+	params := url.Values{}
+	if ip != "" {
+		params.Set("ip", ip)
+	}
+	if email != "" {
+		params.Set("email", email)
+	}
+	if phone != "" {
+		params.Set("phone", phone)
+	}
+	if urlStr != "" {
+		params.Set("url", urlStr)
+	}
+	if len(params) == 0 {
+		return nil, fmt.Errorf("verifip: at least one parameter is required")
+	}
+
+	u := fmt.Sprintf("%s/v1/assess?%s", c.baseURL, params.Encode())
+
+	var result AssessResponse
+	if err := c.request(ctx, http.MethodGet, u, nil, &result, true); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
 // RateLimit returns the most recently observed rate limit information,
 // or nil if no rate limit headers have been received yet.
 func (c *Client) RateLimit() *RateLimitInfo {

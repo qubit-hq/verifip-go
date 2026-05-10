@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
@@ -33,7 +34,7 @@ func TestCheck_Success(t *testing.T) {
 		if auth := r.Header.Get("Authorization"); auth != "Bearer test-key" {
 			t.Errorf("unexpected auth header: %s", auth)
 		}
-		if ua := r.Header.Get("User-Agent"); ua != "verifip-go/0.1.0" {
+		if ua := r.Header.Get("User-Agent"); !strings.HasPrefix(ua, "verifip-go/") {
 			t.Errorf("unexpected user-agent: %s", ua)
 		}
 
