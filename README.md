@@ -1,99 +1,18 @@
-# VerifIP Go SDK
+# DEPRECATED: this SDK is retired
 
-Official Go client for the [VerifIP](https://verifip.com) IP fraud-detection API. Detect proxies, VPNs, Tor exit nodes, and datacenter IPs in real time.
+The VerifIP language SDKs were retired on **2026-09-25** and receive no
+further releases or fixes. The last version is 0.2.0. It keeps working, but
+it will not learn new response fields.
 
-## Installation
+**Use the HTTPS API directly.** It is one header and one JSON request:
 
 ```bash
-go get github.com/qubit-hq/verifip-go
+curl -H "Authorization: Bearer vip_your_api_key"   "https://verifip.hextner.com/v1/check?ip=185.220.101.1"
 ```
 
-## Quick Start
+Copy-paste examples for curl, JavaScript, Python, Go, PHP, Java and Ruby, with
+retries, timeouts and connection reuse, are in the VerifIP API guide under
+"Integrating without an SDK". For typed models, generate a client from the
+OpenAPI spec with openapi-generator.
 
-```go
-package main
-
-import (
-    "context"
-    "fmt"
-    "log"
-
-    verifip "github.com/qubit-hq/verifip-go"
-)
-
-func main() {
-    client := verifip.NewClient("your-api-key")
-
-    resp, err := client.Check(context.Background(), "8.8.8.8")
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    fmt.Printf("Fraud score: %.1f\n", resp.FraudScore)
-    fmt.Printf("VPN: %v, Proxy: %v, Tor: %v\n", resp.IsVPN, resp.IsProxy, resp.IsTor)
-}
-```
-
-## Methods
-
-### `Check(ctx, ip) (*CheckResponse, error)`
-
-Check a single IP address for fraud signals.
-
-### `CheckBatch(ctx, ips) (*BatchResponse, error)`
-
-Check up to 100 IP addresses in a single request.
-
-```go
-resp, err := client.CheckBatch(ctx, []string{"1.1.1.1", "8.8.8.8"})
-for _, r := range resp.Results {
-    fmt.Printf("%s: %.1f\n", r.IP, r.FraudScore)
-}
-```
-
-### `Health(ctx) (*HealthResponse, error)`
-
-Check API health status. Does not require authentication.
-
-### `RateLimit() *RateLimitInfo`
-
-Returns the most recently observed rate limit state, or `nil` if no requests have been made yet.
-
-## Error Handling
-
-All API errors are returned as `*verifip.APIError` with status code, error code, and message.
-
-```go
-resp, err := client.Check(ctx, ip)
-if err != nil {
-    if verifip.IsAuthError(err) {
-        // Invalid or missing API key (401)
-    }
-    if verifip.IsRateLimitError(err) {
-        // Too many requests (429)
-    }
-    log.Fatal(err)
-}
-```
-
-## Configuration
-
-```go
-client := verifip.NewClient("your-api-key",
-    verifip.WithBaseURL("https://custom-api.example.com"),
-    verifip.WithTimeout(10 * time.Second),
-    verifip.WithHTTPClient(customHTTPClient),
-    verifip.WithMaxRetries(5),
-)
-```
-
-## Rate Limits
-
-Rate limit headers (`X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`) are automatically parsed from every response and accessible via `client.RateLimit()`.
-
-The client automatically retries on 429 and 5xx responses with exponential backoff and jitter.
-
-## Requirements
-
-- Go 1.22+
-- Zero external dependencies (stdlib only)
+This repository is archived and read-only.
